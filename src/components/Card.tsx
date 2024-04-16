@@ -1,9 +1,9 @@
 import React from 'react'
 
-export default function Card() {
+export default function Card({ pokemonImage, pokemonName }: { pokemonImage: string; pokemonName: string }) {
   return (
     <div className="avatar bg-primary rounded-full">
-      <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/132.png" alt="ditto" />
+      {pokemonImage && pokemonName ? <img src={pokemonImage} alt={pokemonName} /> : <div className="skeleton h-16 w-16 rounded-full"></div>}
     </div>
   )
 }
