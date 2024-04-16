@@ -8,12 +8,31 @@ interface Pokemon {
   name: string
 }
 
+function getRandomNumber(max: number) {
+  return Math.floor(Math.random() * max)
+}
 export default function App() {
   const [pokemons, setPokemons] = useState(Array<Pokemon>)
   const [score, setScore] = useState(0)
   const [highScore, setHighScore] = useState(0)
 
   const [clickedIndexes, setClickedIndexes] = useState(new Set<number>([]))
+  const [randomIndexes, setRandomIndexes] = useState<number[]>([])
+
+  function randomizeIndexes() {
+    const randomNums: number[] = []
+
+    // This should be the same length as number of possible pokemon & for loop length
+    const possibleIndexes = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+    for (let i = 0; i < 10; i++) {
+      const randomNum = getRandomNumber(possibleIndexes.length)
+      randomNums.push(possibleIndexes[randomNum])
+      possibleIndexes.splice(randomNum, 1)
+    }
+
+    setRandomIndexes(randomNums)
+  }
 
   function handleTurn(index: number) {
     if (clickedIndexes.has(index)) {
@@ -28,6 +47,7 @@ export default function App() {
       setClickedIndexes(currentClickedIndexes)
       setScore(score + 1)
     }
+    randomizeIndexes()
   }
 
   useEffect(() => {
@@ -65,14 +85,22 @@ export default function App() {
     fetchPokemons().catch((error) => {
       console.error('Error fetching data: ', error)
     })
+    randomizeIndexes()
   }, [])
 
   return (
     <div>
       <Navbar score={score} highScore={highScore} />
-      {pokemons.map((pokemon, index) => (
-        <Card key={index} pokemonImage={pokemon.image} pokemonName={pokemon.name} index={index} handleClick={handleTurn} />
-      ))}
+      {pokemons.length == 10 &&
+        randomIndexes.map((index) => (
+          <Card
+            key={index}
+            pokemonImage={pokemons[index].image}
+            pokemonName={pokemons[index].name}
+            index={index}
+            handleClick={handleTurn}
+          />
+        ))}
     </div>
   )
 }
