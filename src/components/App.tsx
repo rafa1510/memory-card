@@ -1,6 +1,7 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 import Navbar from './Navbar'
+import Footer from './Footer'
 import Card from './Card'
 
 interface Pokemon {
@@ -89,18 +90,24 @@ export default function App() {
   }, [])
 
   return (
-    <div>
+    <div className="flex flex-col h-screen">
       <Navbar score={score} highScore={highScore} />
-      {pokemons.length == 10 &&
-        randomIndexes.map((index) => (
-          <Card
-            key={index}
-            pokemonImage={pokemons[index].image}
-            pokemonName={pokemons[index].name}
-            index={index}
-            handleClick={handleTurn}
-          />
-        ))}
+      <main className="p-8 pt-0">
+        <h1 className="text-lg">Increase your score by clicking on a Pokémon but don't click the same one twice!</h1>
+        <div className="mt-10">
+          {pokemons.length == 10 &&
+            randomIndexes.map((index) => (
+              <Card
+                key={index}
+                pokemonImage={pokemons[index].image}
+                pokemonName={pokemons[index].name}
+                index={index}
+                handleClick={handleTurn}
+              />
+            ))}
+        </div>
+      </main>
+      <Footer />
     </div>
   )
 }
